@@ -13,14 +13,15 @@ Method
 ===========
 A linear classifier is used to to classify the 11 possible kind of movements: walking, falling, lying down, lying, sitting down, sitting, standing up from lying, on all fours, sitting on the ground, standing up from sitting, standing up from sitting on the ground.
 
-Method
+File
 ===========
-The "DataProcessing.m" file contains two parts. The first one is to change the tag identificator (010-000-024-033,020-000-033-111,020-000-032-221,010-000-030-096) into four categorical index (1,2,3,4). The second one is my try to just keep some patial dataset with motions that are of significant distinction from one another (1:walking, 4:lying, 6:sitting, 7:standing up from lying, and 9: sitting on the ground.)
+The "DataProcessing.m" file contains three parts. The first one is to change the tag identificator (010-000-024-033,020-000-033-111,020-000-032-221,010-000-030-096) into four categorical index (1,2,3,4). The second one is to organize the dataset and organize it as a "data.mat" file. Third part is formulate the data that can be read by the libsvm package and then train and test the classification result using a linear kernel in libsvm package.
 
 Potential Challenge
 ===========
-Some of the motions are quite similar. For example, "standing up from sitting" and "standing up from sitting on the ground". In addition, since this is a time-series dataset, a possible challenge would be how to retrieve time-series information from  the (x,y,z) coordinates and formulate it as a machine learning feature.
-
+1. Some of the motions are quite similar. For example, "standing up from sitting" and "standing up from sitting on the ground". 
+2. This is a time-series dataset, a possible challenge would be how to retrieve time-series information from  the (x,y,z) coordinates and formulate it as a machine learning feature.
+3. The time-series coordinate records are not of the same length for all of the subjects. Moreoever, for a specific subject, the data of each motion is of different length of duration as well.
 
 Resources used
 ===========
@@ -30,3 +31,12 @@ How to run the code
 ===========
 1. Download the dataset from the link by copy and paste command and save it as a .xlsx file.
 2. Run the DataProcessing.m file.
+
+Result
+===========
+Since there are only five subjects, five-fold cross validation is applied and the result is the following:
+Accuracy = 64.5765% (3728/5773) (classification)
+Accuracy = 58.8649% (3433/5832) (classification)
+Accuracy = 60.1462% (4197/6978) (classification)
+Accuracy = 60.5719% (4025/6645) (classification)
+Accuracy = 58.2784% (4685/8039) (classification)
