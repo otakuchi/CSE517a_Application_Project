@@ -1,4 +1,4 @@
-% Created: 01/03/2018
+% Created: 02/26/2018
 % Data description: https://archive.ics.uci.edu/ml/machine-learning-databases/00196/dataSetDescription.names
 % RunLength function is required to run this file, which is available at:
 % https://www.mathworks.com/matlabcentral/fileexchange/41813-runlength
