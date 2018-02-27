@@ -15,7 +15,7 @@ A linear classifier is used to to classify the 11 possible kind of movements: wa
 
 File
 ===========
-The "DataProcessing.m" file contains three parts. The first one is to change the tag identificator (010-000-024-033,020-000-033-111,020-000-032-221,010-000-030-096) into four categorical index (1,2,3,4). The second one is to organize the dataset and organize it as a "data.mat" file. Third part is formulate the data that can be read by the libsvm package and then train and test the classification result using a linear kernel in libsvm package.
+The "DataProcessing.m" file contains three parts. The first one is to change the tag identificator (010-000-024-033,020-000-033-111,020-000-032-221,010-000-030-096) into four categorical index (1,2,3,4). The second one is to organize the dataset and organize it as a "data.mat" file. Third part is formulate the data that can be read by the MATLAB "fitcecoc" function and then train and test the classification result.
 
 Potential Challenge
 ===========
@@ -25,25 +25,15 @@ Potential Challenge
 
 Resources used
 ===========
-libsvm package on MATLAB.
+Statistical and Machine Learning Toolbox on MATLAB.
 
 How to run the code
 ===========
-1. Download the dataset from the link by copy and paste command and save it as a .xlsx file.
-2. Run the DataProcessing.m file.
+1. Install the "RunLength.m" function available at: https://www.mathworks.com/matlabcentral/fileexchange/41813-runlength
+2. Download the dataset from the link by copy and paste command and save it as a .xlsx file.
+3. Run the DataProcessing.m file until line 150; the rest of the lines is not related to this milestone.
 
 Result
 ===========
-Since there are only five subjects, using a five-fold cross validation is more reasonable way to validate the model. SVM classification is applied and the result is the following:
+10-fold crossvalidatioin results is shown and achieve a general error of 0.3735
 
-Accuracy = 64.5765% (3728/5773) (classification)
-
-Accuracy = 58.8649% (3433/5832) (classification)
-
-Accuracy = 60.1462% (4197/6978) (classification)
-
-Accuracy = 60.5719% (4025/6645) (classification)
-
-Accuracy = 58.2784% (4685/8039) (classification)
-
-The overall accuracy is 60.49%.
