@@ -1,4 +1,5 @@
-% Created: 02/26/2018
+% Author: Yao-Chi Yu
+% Last edited: 02/27/2018
 % Data description: https://archive.ics.uci.edu/ml/machine-learning-databases/00196/dataSetDescription.names
 % RunLength function is required to run this file, which is available at:
 % https://www.mathworks.com/matlabcentral/fileexchange/41813-runlength
@@ -62,8 +63,9 @@ for i = 1:size(raw,1)
 end
 %%
 clearvars -except Subject
+activity_choice = [1:11];
 X_activity = cell(11,5);
-activity_choice = [1 4 6 7 9];
+
 for sub = 1:5
 index = find(Subject(:,1) == sub); % For subject 1
 X = Subject(index,1:end-1); Y = Subject(index,end);
@@ -115,3 +117,49 @@ end
 end
 % X_activity is the 11 type of actions
 % Try: get velocity
+save('data.mat','X_activity')
+
+%% Training and Testing 
+clc;clear
+load data.mat
+N = 5;
+num_feature = 12;
+g = 1/num_feature;
+% err_tot_r = zeros(num_activity,1);
+
+for run_id = 1:N
+    X_pretrain = cell(11,1);
+    for activity = 1:11
+        for subj = setdiff(1:5,run_id)
+            X_pretrain{activity,1} = [X_pretrain{activity,1}; X_activity{activity,subj}];
+        end
+    end
+    X_pretest = cell(11,1);
+    for activity = 1:11
+        for subj = run_id
+            X_pretest{activity,1} = [X_pretest{activity,1}; X_activity{activity,subj}];
+        end
+    end
+    C_train = cellfun('size',X_pretrain,1);
+    C_test = cellfun('size',X_pretest,1);
+    X_train = []; X_test = []; Y_train = []; Y_test = [];
+    for activity = 1:11
+        X_train = [X_train ; X_pretrain{activity,1}];
+        X_test = [X_test ; X_pretest{activity,1}];
+        Y_train = [Y_train; activity*ones(C_train(activity,1),1)];
+        Y_test = [Y_test; activity*ones(C_test(activity,1),1)];
+    end
+    
+%     test_id = randi(num_obj);
+%     % Training data
+%     X_train = X_nl(1:end ~= test_id,:);
+%     Y_train = Y(1:end ~= test_id);
+%     % Testing data
+%     X_test = X_nl(test_id,:);
+%     Y_test = Y(test_id);
+    % Train a Multiclass Model Using LibSVM
+    model = svmtrain(Y_train, X_train, ['-t 0 -q -c 1 -g ', num2str(g)]); % g = 1/num_features
+    [predict_label, accuracy, prob_values] = svmpredict(Y_test, X_test, model);
+    accu_tot_1(run_id) = accuracy(1);
+end
+accu_avg_1 = sum(accu_tot_1) / N;
