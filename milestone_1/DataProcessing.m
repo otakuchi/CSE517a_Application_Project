@@ -125,8 +125,30 @@ load data.mat
 N = 5;
 num_feature = 12;
 g = 1/num_feature;
-% err_tot_r = zeros(num_activity,1);
 
+for run_id = 1:N
+    X_pretrain = cell(11,1);
+    for activity = 1:11
+        for subj = 1:5
+            X_pretrain{activity,1} = [X_pretrain{activity,1}; X_activity{activity,subj}];
+        end
+    end
+    C_train = cellfun('size',X_pretrain,1);
+    X_train = []; Y_train = [];
+    for activity = 1:11
+        X_train = [X_train ; X_pretrain{activity,1}];
+        Y_train = [Y_train; activity*ones(C_train(activity,1),1)];
+    end
+end
+
+%% Use MATLAB - Statistical and Machine Learning Toolbox
+CVMdl = fitcecoc(X_train,Y_train,'Learners','linear','CrossVal','on');
+[label,score,cost] = kfoldPredict(CVMdl);
+L = kfoldLoss(CVMdl)
+
+
+
+%% libsvm
 for run_id = 1:N
     X_pretrain = cell(11,1);
     for activity = 1:11
@@ -150,14 +172,14 @@ for run_id = 1:N
         Y_test = [Y_test; activity*ones(C_test(activity,1),1)];
     end
     
-%     test_id = randi(num_obj);
-%     % Training data
-%     X_train = X_nl(1:end ~= test_id,:);
-%     Y_train = Y(1:end ~= test_id);
-%     % Testing data
-%     X_test = X_nl(test_id,:);
-%     Y_test = Y(test_id);
-    % Train a Multiclass Model Using LibSVM
+    test_id = randi(num_obj);
+    % Training data
+    X_train = X_nl(1:end ~= test_id,:);
+    Y_train = Y(1:end ~= test_id);
+    % Testing data
+    X_test = X_nl(test_id,:);
+    Y_test = Y(test_id);
+    Train a Multiclass Model Using LibSVM
     model = svmtrain(Y_train, X_train, ['-t 0 -q -c 1 -g ', num2str(g)]); % g = 1/num_features
     [predict_label, accuracy, prob_values] = svmpredict(Y_test, X_test, model);
     accu_tot_1(run_id) = accuracy(1);
