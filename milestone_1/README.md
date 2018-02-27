@@ -35,6 +35,7 @@ How to run the code
 Result
 ===========
 Since there are only five subjects, using a five-fold cross validation is more reasonable way to validate the model. SVM classification is applied and the result is the following:
+
 Accuracy = 64.5765% (3728/5773) (classification)
 
 Accuracy = 58.8649% (3433/5832) (classification)
