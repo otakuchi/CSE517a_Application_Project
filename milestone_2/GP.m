@@ -30,14 +30,40 @@ for run_id = 1:N
         Y_test{1,run_id} = [Y_test{1,run_id}; activity*ones(C_test(activity,run_id),1)];
     end
 end
-%%
-  meanfunc = [];                    % empty: don't use a mean function
-  covfunc = @covSEiso;              % Squared Exponental covariance function
-  likfunc = @likGauss;              % Gaussian likelihood
+%% Gaussian process MATLAB
+
+X = X_train{1,1}; Y =Y_train{1,1};
+sigma0 = std(Y);
+sigmaF0 = sigma0;
+phi1 = [mean(std(X));std(Y)/sqrt(2)];
+
+gpr_sqexp = fitrgp(X,Y,'Basis','constant','Verbose',1,'KernelFunction','squaredexponential',...
+'KernelParameters',phi1,'Sigma',sigma0,'Standardize',1);
+
+XX = X_test{1,1}; YY = Y_test{1,1};
+Ypred_sqexp = predict(gpr_sqexp,XX);
+L_sqexp = loss(gpr_sqexp,XX ,YY,'LossFun','mse')
+
+% phi2 = [std(X)';std(Y)/sqrt(2)];
+gpr_ardsqexp = fitrgp(X,Y,'Basis','constant','Verbose',1,'KernelFunction','ardsquaredexponential',...
+'Sigma',sigma0,'Standardize',1);
+L_ardsqexp = loss(gpr_ardsqexp,XX ,YY,'LossFun','mse')
+Ypred_ardsqexp = predict(gpr_ardsqexp,XX);
+
+%% GPML toolbox
   
   Xtr = X_train{1,1}; Ytr = Y_train{1,1};
   Xte = X_test{1,1}; Yte = Y_test{1,1};
+
+hycov = [std(Xtr)';std(Ytr)/sqrt(2)]';
+hymean = [mean(Xtr)';mean(Ytr)]';
+
+meanfunc = @meanConst; hyp.mean = 0;                    % empty: don't use a mean function
+covfunc = @covSEard;   hyp.cov = hycov;              % Squared Exponental covariance function
+likfunc = @likErf;             % Gaussian likelihood
+
   n = 11*150;
+  hyp = minimize(hyp, @gp, -40, @infEP, meanfunc, covfunc, likfunc, Xtr, Ytr);
   
   nu = fix(n/2); iu = randperm(n); iu = iu(1:nu); u = Xtr(iu,:); yu = Ytr(iu,:);
   covfuncF = {@apxSparse, {covfunc}, u};
