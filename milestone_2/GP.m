@@ -31,7 +31,6 @@ for run_id = 1:N
     end
 end
 %% Gaussian process MATLAB
-
 X = X_train{1,1}; Y =Y_train{1,1};
 sigma0 = std(Y);
 sigmaF0 = sigma0;
