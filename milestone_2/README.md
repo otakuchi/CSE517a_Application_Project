@@ -12,15 +12,15 @@ Correctly classifiy the 11 types of movement (walking, falling, lying down, lyin
 
 Method
 ===========
-A GP Regression model is applied to classify the 11 possible kind of movements: walking, falling, lying down, lying, sitting down, sitting, standing up from lying, on all fours, sitting on the ground, standing up from sitting, standing up from sitting on the ground.
+I separated the data into two main groups to do GP classification; walking, falling, lying down, sitting down, standing up from lying, standing up from sitting, standing up from sitting on the ground as the static group, and the rest be non-static group.
 
 File
 ===========
-The "GP.m" file uses the MATLAB built-in Gaussian process regression (GPR) model. I used two different kernels: 'squaredexponential' and 'ardsquaredexponential'. The code before line 50 is what required in this milestone. Also, mean-square-error is used as the error metric.
+The "GP.m" file uses the GPML package to perform GP classification. 
 
 Potential Challenge
 ===========
-1. There is no Gaussian Process Multivariate classification package available; I tried various online resources but all of them supports binary classificationonly only.
+Gaussian Process multclass classification package is not available, so following the advice by the TA, I converted the problem into a binary classification problem. For a dataset with as many attributes as twelve, I tried not to use ARD covariance since there will be too many hyperparameters, and I don't want to overfit the data to get a bad model.
 
 Resources used
 ===========
@@ -30,4 +30,8 @@ How to run the code
 ===========
 1. load the data generated in milestone 1 folder
 2. Run the code
+
+Result
+===========
+The 10-fold CV result is very good, with most of the time achieveing 100% accuracy rate for differentiating the static data from the non-static ones. The average accuracy is 97.84% in my run. 
 
