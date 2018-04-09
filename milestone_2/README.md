@@ -33,5 +33,5 @@ How to run the code
 
 Result
 ===========
-The 10-fold CV result is very good, with most of the time achieveing 100% accuracy rate for differentiating the static data from the non-static ones. The average accuracy is 97.84% in my run. 
+I corrected some coding errors. The average accuracy of 10-fold CV result is 63% in my run. 
 
