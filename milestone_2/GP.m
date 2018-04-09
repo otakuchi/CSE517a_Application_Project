@@ -65,26 +65,36 @@ clc
 % Xte = Xte(2:end,[1,4,7,10]) - Xte(1:end-1,[1,4,7,10]);
 % Ytr = Ytr(2:end,:); Yte = Yte(2:end,:);
 
-rand_id_tr = randsample(size(Xtr,1),500,true);
-Xtr = Xtr(rand_id_tr,:); Ytr = Ytr(rand_id_tr,:); 
+rand_id_tr_p = (k-1)*floor(sum(Ytr==1)/10)+1 : k*floor(sum(Ytr==1)/10);
+rand_id_tr_n = sum(Ytr==1) + (k-1)*floor(sum(Ytr== -1 )/10)+1 : sum(Ytr==1) + k*floor(sum(Ytr== -1 )/10);
+% rand_id_tr = randsample(size(Xtr,1),500,true);
+Xtr_p = Xtr(rand_id_tr_p,:); Ytr_p = Ytr(rand_id_tr_p,:); 
+Xtr_n = Xtr(rand_id_tr_n,:); Ytr_n = Ytr(rand_id_tr_n,:); 
+Xtrr = [Xtr_p;Xtr_n]; Ytrr = [Ytr_p;Ytr_n];
 
-rand_id_te = randsample(size(Xte,1),500,true);
-Xte = Xte(rand_id_te,:); Yte = Yte(rand_id_te,:);
+rand_id_te_p = (k-1)*floor(sum(Yte==1)/10)+1 : k*floor(sum(Yte==1)/10);
+rand_id_te_n = sum(Yte==1) + (k-1)*floor(sum(Yte== -1 )/10)+1 : sum(Yte==1) + k*floor(sum(Yte== -1 )/10);
+% rand_id_te = randsample(size(Xte,1),500,true);
+Xte_p = Xte(rand_id_te_p,:); Yte_p = Yte(rand_id_te_p,:); 
+Xte_n = Xte(rand_id_te_n,:); Yte_n = Yte(rand_id_te_n,:); 
+Xtee = [Xte_p;Xte_n]; Ytee = [Yte_p;Yte_n];
+
 
 % centering
-Xtr_nl = bsxfun(@rdivide,Xtr,max(Xtr,[],1));
-Xte_nl = bsxfun(@rdivide,Xte,max(Xte,[],1));
+Xtr_nl = bsxfun(@rdivide,Xtrr,max(Xtrr,[],1));
+Xte_nl = bsxfun(@rdivide,Xtee,max(Xtee,[],1));
 
 meanfunc = @meanConst; hyp.mean = 0;
 covfunc = @covSEiso; ell = 1.0; sf = 1.0;   hyp.cov =  log([ell sf]);
 likfunc = @likLogistic;
-hyp = minimize(hyp, @gp, -40, @infEP, meanfunc, covfunc, likfunc, Xte_nl , Ytr);
-[ymu, ys2, fmu, fs2, lp] = gp(hyp, @infEP, meanfunc, covfunc, likfunc, Xtr_nl, Ytr, Xte_nl , Yte);
+hyp = minimize(hyp, @gp, -40, @infEP, meanfunc, covfunc, likfunc, Xtr_nl , Ytrr);
+[ymu, ys2, fmu, fs2, lp] = gp(hyp, @infEP, meanfunc, covfunc, likfunc, Xtr_nl, Ytrr, Xte_nl , Ytee);
 % [nlZ dnlZ ] = gp(hyp, @infEP, meanfunc, covfunc, likfunc, Xtr_nl, Ytr);
-prob = exp(lp); Y_final = zeros(size(Yte));
+prob = exp(lp); Y_final = zeros(size(Ytee));
 Y_final((prob >= 0.5),:) = 1 ; Y_final((prob < 0.5),:) = -1; 
-acc(k,:) = sum(Yte==Y_final)/size(Yte,1);
+acc(k,:) = sum(Ytee==Y_final)/size(Ytee,1);
 end
+acc_avg = sum(acc)/size(acc,1);
 %% Gaussian process MATLAB
 % X = X_train{1,1}; Y =Y_train{1,1};
 % sigma0 = std(Y);
