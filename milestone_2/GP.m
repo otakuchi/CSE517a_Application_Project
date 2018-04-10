@@ -81,14 +81,14 @@ Xtee = [Xte_p;Xte_n]; Ytee = [Yte_p;Yte_n];
 
 
 % centering
-Xtr_nl = bsxfun(@rdivide,Xtrr,max(Xtrr,[],1));
-Xte_nl = bsxfun(@rdivide,Xtee,max(Xtee,[],1));
+% Xtr_nl = bsxfun(@rdivide,Xtrr,max(Xtrr,[],1));
+% Xte_nl = bsxfun(@rdivide,Xtee,max(Xtee,[],1));
 
 meanfunc = @meanConst; hyp.mean = 0;
 covfunc = @covSEiso; ell = 1.0; sf = 1.0;   hyp.cov =  log([ell sf]);
 likfunc = @likLogistic;
-hyp = minimize(hyp, @gp, -40, @infEP, meanfunc, covfunc, likfunc, Xtr_nl , Ytrr);
-[ymu, ys2, fmu, fs2, lp] = gp(hyp, @infEP, meanfunc, covfunc, likfunc, Xtr_nl, Ytrr, Xte_nl , Ytee);
+hyp = minimize(hyp, @gp, -40, @infEP, meanfunc, covfunc, likfunc, Xtrr , Ytrr);
+[ymu, ys2, fmu, fs2, lp] = gp(hyp, @infEP, meanfunc, covfunc, likfunc, Xtrr, Ytrr, Xtee , Ytee);
 % [nlZ dnlZ ] = gp(hyp, @infEP, meanfunc, covfunc, likfunc, Xtr_nl, Ytr);
 prob = exp(lp); Y_final = zeros(size(Ytee));
 Y_final((prob >= 0.5),:) = 1 ; Y_final((prob < 0.5),:) = -1; 

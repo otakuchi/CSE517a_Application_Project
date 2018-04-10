@@ -85,6 +85,10 @@ fig = biplot(coeff(:,1:2),'scores',score(:,1:2),'varlabels',{'v_1','v_2','v_3','
 saveas(gca,strcat('pca',num2str(k)),'png');
 close all
 
+% svd
+% [U,S,V] = svd(A,'econ');
+% Z = Xtrr*V(1:3,:); X_hat = X*V*V.';
+
 Xtrr_pca = Xtrr(:,[1,4,7,10]);
 Xtee_pca = Xtee(:,[1,4,7,10]);
 
