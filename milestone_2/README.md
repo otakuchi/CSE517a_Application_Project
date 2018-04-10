@@ -33,5 +33,4 @@ How to run the code
 
 Result
 ===========
-I corrected some coding errors. The average accuracy of 10-fold CV result is 63% in my run. 
-
+I corrected some coding errors. The average accuracy of 10-fold CV result is 82.66%
