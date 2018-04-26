@@ -103,3 +103,9 @@ Y_final((prob >= 0.5),:) = 1 ; Y_final((prob < 0.5),:) = -1;
 acc(k,:) = sum(Ytee==Y_final)/size(Ytee,1);
 end
 acc_avg = sum(acc)/size(acc,1);
+
+%% Use MATLAB - Statistical and Machine Learning Toolbox -- Not done yet
+t = templateLinear();
+CVMdl = fitcecoc(X_train,Y_train,'Learners',t,'CrossVal','on');
+[label,score,cost] = kfoldPredict(CVMdl);
+L = kfoldLoss(CVMdl)
