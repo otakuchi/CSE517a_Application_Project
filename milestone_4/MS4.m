@@ -1,6 +1,6 @@
 clc;clear
-load ('C:\Users\user0630\OneDrive - Washington University in St. Louis\2018 Spring\Machine Learning\Application Project\CSE517a_Application_Project.git\trunk\milestone_1\data.mat')
-% load ('C:\Users\Yao-Chi\OneDrive - Washington University in St. Louis\2018 Spring\Machine Learning\Application Project\CSE517a_Application_Project.git\trunk\milestone_1\data.mat')
+% load ('C:\Users\user0630\OneDrive - Washington University in St. Louis\2018 Spring\Machine Learning\Application Project\CSE517a_Application_Project.git\trunk\milestone_1\data.mat')
+load ('C:\Users\Yao-Chi\OneDrive - Washington University in St. Louis\2018 Spring\Machine Learning\Application Project\CSE517a_Application_Project.git\trunk\milestone_1\data.mat')
 %% Training and Testing 
 N = 5;
 num_feature = 12;
@@ -81,14 +81,19 @@ Xte_p = Xte(rand_id_te_p,:); Yte_p = Yte(rand_id_te_p,:);
 Xte_n = Xte(rand_id_te_n,:); Yte_n = Yte(rand_id_te_n,:); 
 Xtee = [Xte_p;Xte_n]; Ytee = [Yte_p;Yte_n];
 
-Lambda = 0.1;
+Lambda = 10;
 % Linear Classifier
-Mdl = fitclinear(Xtrr,Ytrr,'ObservationsIn','columns',...
-    'Learner','logistic','Regularization','lasso',...
-    'Lambda',Lambda,'GradientTolerance',1e-8);
+% mdl = fitlm(Xtrr,Ytrr);
+Mdl = fitclinear(Xtrr,Ytrr,'ObservationsIn','rows',...
+    'Solver','sparsa',...
+    'OptimizeHyperparameters','auto','HyperparameterOptimizationOptions',...
+    struct('AcquisitionFunctionName','expected-improvement-plus'));
+
+
 Y_predict = predict(Mdl,Xtee);
 acc_LC(k,:) = sum(Ytee==Y_predict)/size(Ytee,1);
 
+close all
 % Gaussian Process
 meanfunc = @meanConst; hyp.mean = 0;
 covfunc = @covSEiso; ell = 1.0; sf = 1.0;   hyp.cov =  log([ell sf]);
@@ -124,3 +129,12 @@ end
 acc_avg_pca = sum(acc_GP_PCA)/size(acc_GP_PCA,1);
 acc_avg_GP = sum(acc_GP)/size(acc_GP,1);
 acc_avg_LC = sum(acc_LC)/size(acc_LC,1);
+
+%%
+save('accuracy.mat','acc_avg_GP','acc_avg_LC','acc_avg_pca','acc_GP','acc_GP_PCA','acc_LC');
+save('all_para.mat');
+%% sign-test
+[p1,h1,stats1] =signtest(acc_GP,acc_GP_PCA)
+[p2,h2,stats2] =signtest(acc_GP,acc_LC)
+[p3,h3,stats3] =signtest(acc_GP_PCA,acc_LC)
+
