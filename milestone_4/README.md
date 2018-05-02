@@ -31,3 +31,9 @@ Result
 10-fold cv accuracy for linear classification is 48.09%
 10-fold cv accuracy for GP classification is 82.83%
 10-fold cv accuracy for pca-GP classification is 81.84%
+
+Sign test is used to examine the performance of each method. By the MATLAB default setting,sign test tests for the hypothesis that the data in (acc1 - acc2) has a distribution with zero median against the alternative that the distribution does not have zero median.
+
+Comparing the accuracy of GP classification and pca-GP classification, we have h=0, which indicates that sign test fails to reject to the null hypothesis of zero median in the difference.
+
+For the comparison of both GP classification and pca-GP classification with linear classifier, both the p-value = 0.002 and h = 1 indicate that at the 5% significance level, the test concludes in favor of the accuracy of GP classification and pca-GP classification.
