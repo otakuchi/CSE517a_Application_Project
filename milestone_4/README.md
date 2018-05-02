@@ -1,26 +1,30 @@
-Milestone 4
+Milestone 4 README
 ===========
 
-Folders
--------
+Work
+===========
+I myself (Yao-Chi Yu) is the only one on this team, so basically I wrote all the code.
 
-Each milestone folder should include the following
+Goal 
+===========
+As the semester goes on, the problem I am working on changes from classifiying 11 types of movement to just binary classification--static and non-static. The dataset consists of motions of the subjects, which are recorded by four tags (ankle left, ankle right, belt and chest) with 3d dimension coordinates (x,y,z).
 
-* All code you wrote/used
-* A README file
+Method
+===========
+Compare all methods (linear classifier, GP-binary classification, PCA+GP-binary classification) using 10 re-runs of a 10-fold cross-validation and perform a suitable statistical test to assess the performance of each method.
 
-They should not include
+File
+===========
+"data.mat" file in Milestone 1.
 
-* Datasets
-* Large packages
+Resources used
+===========
+Statistical and Machine Learning Toolbox on MATLAB.
 
-README
-------
+How to run the code
+===========
+1. load "data.mat" file in Milestone 1.
+2. Run the code "MS4.m".
 
-The README file should include
-
-* Description of what your team did
-* Methods used to accomplish each part
-* Potential difficulties faced
-* Resources used
-* Description of how to run the code in the folder
+Result
+===========
