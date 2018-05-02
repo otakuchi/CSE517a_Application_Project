@@ -28,3 +28,6 @@ How to run the code
 
 Result
 ===========
+10-fold cv accuracy for linear classification is 48.09%
+10-fold cv accuracy for GP classification is 82.83%
+10-fold cv accuracy for pca-GP classification is 81.84%
